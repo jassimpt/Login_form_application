@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:login_form/screens/loginscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class homeScreen extends StatelessWidget {
   const homeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
           children: [
             Expanded(
               child: ListView.builder(
@@ -28,18 +30,25 @@ class homeScreen extends StatelessWidget {
             )
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(
-              context,
-              MaterialPageRoute(
-                builder: (context) => homeScreen(),
-              ));
-        },
-        child: Icon(Icons.arrow_back_ios),
-        backgroundColor: Colors.greenAccent,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            signout(context);
+          },
+          child: Icon(Icons.arrow_back_ios),
+          backgroundColor: Colors.greenAccent,
+        ),
       ),
     );
+  }
+
+  void signout(BuildContext ctx) async {
+    Navigator.of(ctx).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => ScreenLogin(),
+        ),
+        (route) => false);
+
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.clear();
   }
 }

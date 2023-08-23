@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:login_form/screens/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScreenLogin extends StatefulWidget {
   ScreenLogin({super.key});
@@ -43,11 +44,12 @@ class _ScreenLoginState extends State<ScreenLogin> {
                 ),
                 TextFormField(
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.isEmpty || value == int) {
                       return 'Field is Empty';
                     }
                   },
                   controller: _passwordcontroller,
+                  keyboardType: TextInputType.number,
                   obscureText: true,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(), labelText: 'Password'),
@@ -74,15 +76,16 @@ class _ScreenLoginState extends State<ScreenLogin> {
     );
   }
 
-  void checklogin(BuildContext ctx) {
+  void checklogin(BuildContext ctx) async {
     final _username = _usernamecontroller.text;
     final _password = _passwordcontroller.text;
 
     if (_username == _password) {
-      print("login success");
       Navigator.push(
           ctx, MaterialPageRoute(builder: (context) => homeScreen()));
-      // go to home
+
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      await pref.setBool('savedkey', true);
     } else {
       ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
           behavior: SnackBarBehavior.floating,

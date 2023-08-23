@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:login_form/screens/home.dart';
 import 'package:login_form/screens/loginscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class screenSplash extends StatefulWidget {
   const screenSplash({super.key});
@@ -12,7 +14,7 @@ class _screenSplashState extends State<screenSplash> {
   @override
   void initState() {
     // TODO: implement initState
-    screenwait();
+    loginshared();
     super.initState();
   }
 
@@ -33,5 +35,20 @@ class _screenSplashState extends State<screenSplash> {
     await Future.delayed(Duration(seconds: 3));
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ScreenLogin()));
+  }
+
+  void loginshared() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    final loggedin = pref.getBool('savedkey');
+
+    if (loggedin == null || loggedin == false) {
+      screenwait();
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => homeScreen(),
+          ));
+    }
   }
 }
